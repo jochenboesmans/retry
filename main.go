@@ -18,7 +18,7 @@ func main() {
 	splitCommand := strings.Split(*command, " ")
 
 	cmd := exec.Command(splitCommand[0], splitCommand[1:]...)
-	fmt.Println(cmd)
+	printMessage(fmt.Sprintf("command to retry: %s", cmd.String()), false)
 
 	for {
 		stdout, err := cmd.StdoutPipe()
@@ -36,7 +36,7 @@ func main() {
 			stdout,
 		}
 		doneLogging := make(chan bool, 1)
-		logCommandOutput(doneLogging, p)
+		go logCommandOutput(doneLogging, p)
 
 		err = cmd.Start()
 		if err != nil {
